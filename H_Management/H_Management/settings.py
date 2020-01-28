@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'hostel.apps.HostelConfig',
     'phonenumber_field',
+    'hostel',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# AUTH_USER_MODEL = 'core.User'

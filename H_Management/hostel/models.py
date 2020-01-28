@@ -1,24 +1,23 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from enum import Enum
 
 
 class Person(models.Model):
-    """class Gender(Enum):
-        Male = 'M'
-        Female = 'F'
-        Other = 'O'"""
+
     GENDER = (
         ('m', 'Male'),
         ('f', 'Female'),
         ('o', 'Other'),
     )
 
-    person_is_staff = models.BooleanField(default=False)
-    person_first_name = models.CharField(max_length=50)
-    person_last_name = models.CharField(max_length=50)
-    person_email = models.CharField(max_length=150)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    person_is_warden = models.BooleanField(default=False)
     person_phone = PhoneNumberField(null=False, blank=False, unique=True)
+    person_prn = models.CharField(max_length=150, unique=True, null=False, default='0')
+    person_room_number = models.CharField(max_length=15, null=False, default='0')
     person_is_chief = models.BooleanField(default=False)
     person_gender = models.CharField(
         max_length=2,
@@ -33,7 +32,7 @@ class Person(models.Model):
         else:
             gen = ' '
 
-        return gen + self.person_first_name + ' ' + self.person_last_name
+        return gen + self.user.get_full_name()
 
 
 class Complaint(models.Model):
@@ -67,7 +66,7 @@ class Complaint(models.Model):
     )
 
     def __str__(self):
-        return 'Complaint number' + str(self.id) + ' by ' + self.reg_by.person_last_name
+        return 'Complaint number' + str(self.id) + ' by ' + self.reg_by.user.last_name
 
 
 class MessMenu(models.Model):

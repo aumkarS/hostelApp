@@ -6,5 +6,7 @@ app_name = 'hostel'
 
 
 urlpatterns = [
-    path('welcome/', views.welcome, name='welcome')
+    path('welcome', views.welcome, name='welcome'),
+    path('login', views.Login.as_view(), name='login'),
+    path('register', views.RegView.as_view(), name='reg'),
 ]
