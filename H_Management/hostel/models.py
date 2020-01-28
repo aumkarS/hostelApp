@@ -68,3 +68,28 @@ class Complaint(models.Model):
 
     def __str__(self):
         return 'Complaint number' + str(self.id) + ' by ' + self.reg_by.person_last_name
+
+
+class MessMenu(models.Model):
+    DAY = (
+        ('mon', 'Monday'),
+        ('tue', 'Tuesday'),
+        ('wed', 'Wednesday'),
+        ('thu', 'Thursday'),
+        ('fri', 'Friday'),
+        ('sat', 'Saturday'),
+        ('sun', 'Sunday'),
+    )
+
+    day_day = models.CharField(
+        max_length=10,
+        choices=DAY,
+        unique=True
+    )
+
+    soup = models.CharField(max_length=50)
+    main_course = models.CharField(max_length=100)
+    dessert = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.get_day_day_display()
