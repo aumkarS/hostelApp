@@ -31,7 +31,7 @@ class PersonReg(forms.ModelForm):
         fields = [
             'person_phone',
             'person_gender',
-            'person_is_staff',
+            'person_is_warden',
             'person_prn',
             'person_room_number',
         ]
