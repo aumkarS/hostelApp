@@ -13,11 +13,11 @@ class Person(models.Model):
         ('o', 'Other'),
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, default=None, on_delete=models.CASCADE)
     person_is_warden = models.BooleanField(default=False)
     person_phone = PhoneNumberField(null=False, blank=False, unique=True)
     person_prn = models.CharField(max_length=150, unique=True, null=False, default='0')
-    person_room_number = models.CharField(max_length=15, null=False, default='0')
+    person_room_number = models.CharField(max_length=15, null=True, default='0')
     person_is_chief = models.BooleanField(default=False)
     person_gender = models.CharField(
         max_length=2,
