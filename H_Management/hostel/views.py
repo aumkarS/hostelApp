@@ -46,10 +46,18 @@ def reg(request):
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            # retype_password = form.cleaned_data['retype_password']
             phone = form.cleaned_data['phone']
             gender = form.cleaned_data['gender']
             prn = form.cleaned_data['prn']
+
+            cu = User.objects.values_list('email')
+            for em in cu:
+                if email == em:
+                    return redirect('hostel:reg')
+            cu = User.objects.values_list('username')
+            for em in cu:
+                if email == em:
+                    return redirect('hostel:reg')
 
             p = Person()
             p.person_phone = phone
@@ -72,52 +80,3 @@ def reg(request):
     return render(request, 'hostel/reg_student.html', {'form': form})
 
 
-"""class RegView(View):
-    form_class = UserReg
-    template_name = 'hostel/reg_student.html'
-
-    def get(self, request):
-        form = self.form_class(None)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request):
-        forms = self.form_class(request.POST)
-        if forms.is_valid():
-            user = forms.save(commit=False)
-            email = forms.cleaned_data['person_email']
-            password = forms.cleaned_data['password']
-            us = User()
-            us.username = email
-            us.set_password(password)
-            us.save()
-            user.save()
-
-            user = authenticate(email=email, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('hostel:dashboard')
-
-        return render(request, self.template_name, {'form': forms})
-
-"""
-
-
-"""def update_profile(request):
-    if request.method == 'POST':
-        user_form = UserReg(request.POST, instance=request.user)
-        profile_form = PersonReg(request.POST, instance=request.user.person)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            # messages.success(request, _('Your profile was successfully updated!'))
-            return redirect('hostel:welcome')
-        # else:
-    else:
-        user_form = UserReg(instance=request.user)
-        profile_form = PersonReg(instance=request.user.person)
-    return render(request, '', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
-"""
