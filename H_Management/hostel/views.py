@@ -1,5 +1,7 @@
 from .models import Person
+from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.db import IntegrityError, transaction
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
@@ -11,6 +13,10 @@ from .forms import UserLogin, RegForm
 
 def welcome(request):
     return render(request, 'hostel/welcome.html', None)
+
+
+def dash(request):
+    return render(request, 'hostel/dash.html')
 
 
 class Login(View):
@@ -38,6 +44,7 @@ class Login(View):
         return render(request, self.template_name, {'form': form})
 
 
+@transaction.atomic
 def reg(request):
     if request.method == 'POST':
         form = RegForm(request.POST)
@@ -58,22 +65,26 @@ def reg(request):
             for em in cu:
                 if email == em:
                     return redirect('hostel:reg')
+            try:
+                with transaction.atomic():
+                    p = Person()
+                    p.person_phone = phone
+                    p.gender = gender
+                    p.person_prn = prn
 
-            p = Person()
-            p.person_phone = phone
-            p.gender = gender
-            p.person_prn = prn
-
-            us = User()
-            us.first_name = first_name
-            us.last_name = last_name
-            us.email = email
-            us.username = email
-            us.set_password(password)
-            p.user = us
-            us.save()
-            p.save()
-            return redirect('hostel:welcome')
+                    us = User()
+                    us.first_name = first_name
+                    us.last_name = last_name
+                    us.email = email
+                    us.username = email
+                    us.set_password(password)
+                    p.user = us
+                    us.save()
+                    p.save()
+            except IntegrityError as e:
+                return HttpResponse('Duplicate values')
+            else:
+                return redirect('hostel:dash')
     else:
         form = RegForm()
 

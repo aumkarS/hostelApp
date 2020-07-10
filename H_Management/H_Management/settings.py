@@ -91,6 +91,8 @@ DATABASES = {
         'USER': 'root',
         'PORT': '',
         'HOST': '',
+        'ATOMIC_REQUESTS': 'True',
+        'AUTO_COMMIT': 'False',
         'OPTIONS': {
                 'init_command': "SET sql_mode = 'STRICT_TRANS_TABLES' "
         }
